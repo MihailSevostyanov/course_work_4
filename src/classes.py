@@ -48,3 +48,42 @@ class Vacancy:
                 return False
             return False
         return False
+
+
+class VacanciesActions(ABC):
+
+    @abstractmethod
+    def add_vacancy(self, vacancy):
+        pass
+
+    @abstractmethod
+    def get_vacancy(self, tags):
+        pass
+
+    @abstractmethod
+    def del_vacancy(self, vacancy_id):
+        pass
+
+
+class VacanciesFile(VacanciesActions):
+    def __init__(self, file='vacancies.json'):
+        self.file = file
+
+    def add_vacancy(self, vacancy):
+        with open(self.file, 'rt', encoding='utf-8') as file:
+            vacancy_list = json.load(file)
+        with open(self.file, 'wt', encoding='utf-8') as file:
+            vacancy_list.append(vacancy)
+            json.dump(vacancy_list, file, ensure_ascii=False, indent=4)
+
+    def get_vacancy(self, tags):
+        pass
+
+    def del_vacancy(self, vacancy_id):
+        with open(self.file, 'rt', encoding='utf-8') as file:
+            vacancies = json.load(file)
+        with open(self.file, 'wt', encoding='utf-8') as file:
+            for vacancy in vacancies:
+                if str(vacancy_id) == vacancy['id']:
+                    vacancies.remove(vacancy)
+            json.dump(vacancies, file, ensure_ascii=False)
