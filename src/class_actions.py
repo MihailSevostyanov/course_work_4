@@ -1,60 +1,81 @@
 import json
 from abc import ABC, abstractmethod
-from config import file_path
+from src.class_vacancy import Vacancy
+from src.sorting import filter_by_salary
 
-
-class VacanciesActions(ABC):
+class FileWorker(ABC):
 
     @abstractmethod
-    def add_vacancy(self, vacancy):
+    def __init__(self):
         pass
 
     @abstractmethod
-    def get_vacancy(self, tags):
+    def write_vacancies(self, vacancies):
         pass
 
     @abstractmethod
-    def del_vacancy(self, vacancy_id):
+    def read_vacancies(self):
+        pass
+
+    @abstractmethod
+    def delete_vacancies(self):
+        pass
+
+    @abstractmethod
+    def delete_salary_vacancies(self):
         pass
 
 
-class VacanciesFile(VacanciesActions):
-    def __init__(self, file=file_path):
-        self.file = file
+class JSONWorker(FileWorker):
+    """
+    добавления вакансий в файл
+    получения данных из файла по указанным критериям
+    удаления информации о вакансиях
+    """
+    def __init__(self, path):
+        self.path = path
 
-    def save_vacancies(self,vacancies):
-        with open(file_path, 'wt', encoding='utf-8') as file:
-            vacancies_json = json.dumps(vacancies, ensure_ascii=False, indent=4)
-            file.write(vacancies_json)
+    def write_vacancies(self, vacancies):
+        """
+        записывает вакансии в файл
+        """
+        with open(self.path, 'w', encoding='utf-8') as file:
+            for_add = []
+            for vacancy in vacancies:
+                for_add.append(vacancy.__dict__)
+            json.dump(for_add, file, ensure_ascii=False, indent=4)
+        print("\nвакансии сохранены в файл\n")
 
-    def add_vacancy(self, vacancy):
-        with open(file_path, "r", encoding="utf8") as file:
-            list_vacancies = json.load(file)
-        with open(file_path, "r", encoding="utf8") as file:
-            list = json.load(file)
-        for v in list_vacancies:
-            if vacancy in v["name"]:
-                list.append(v)
-        list_vacancies_add = json.dumps(list, ensure_ascii=False, indent=4)
+    def read_vacancies(self):
+        """
+        считывает вакансии из файла и преобразует их в список объектов
+        """
+        with open(self.path, "r", encoding='utf-8') as file:
+            new_list = json.load(file)
+            vacancies = Vacancy.vacancies_from_file(new_list)
+            return vacancies
 
-        with open(file_path, "w", encoding="utf8") as file:
-            file.write(list_vacancies_add)
-        return list_vacancies_add
+    def delete_vacancies(self):
+        """
+        удаляет ваканси из файла
+        """
+        with open(self.path, 'w', encoding='utf-8') as file:
+            # json.dump('', file, ensure_ascii=False, indent=4)
+            file.truncate(0)
 
-    def get_vacancy(self, criterion):
-        with open(file_path, "r", encoding="utf8") as file:
-            vacancies = json.load(file)
-            criterion_vac = []
-            for vac in vacancies:
-                if not vac["snippet"]["requirement"]:
-                    continue
-                else:
-                    if criterion in vac["snippet"]["requirement"]:
-                        criterion_vac.append(vac)
-        return criterion_vac
+    def delete_salary_vacancies(self):
+        """
+        удаляет вакансии которые не соответстуют выбранному диапазону зарплат
+        """
+        with open(self.path, "r", encoding='utf-8') as file:
+            new_list = json.load(file)
+            vacancies = Vacancy.vacancies_from_file(new_list)
 
-    def del_vacancy(self):
-        list_vacancies_del = []
-        list = json.dumps(list_vacancies_del, ensure_ascii=False)
-        with open(file_path, "w", encoding="utf8") as file:
-            file.write(list)
+        sorted_vacancies = filter_by_salary(vacancies)
+
+        with open(self.path, 'w', encoding='utf-8') as file:
+            for_add = []
+            for vacancy in sorted_vacancies:
+                for_add.append(vacancy.__dict__)
+            json.dump(for_add, file, ensure_ascii=False, indent=4)
+        print("\nВакансии не соответствующие выбранной зарплате удалены из файла\n")
