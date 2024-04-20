@@ -1,4 +1,3 @@
-import os
+import pathlib
 
-script_dir = os.path.dirname(__file__)
-file_path = os.path.join(script_dir, 'data/vacancies.json')
+ROOT_DIR = pathlib.Path(__file__).parent
