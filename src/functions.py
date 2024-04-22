@@ -12,14 +12,14 @@ class Functions:
         """
         выводит поисковый запрос для запроса вакансий из hh.ru
         """
-        return input('Введите поисковый запрос для поска вакансий: ')
+        return input('Введите поисковый запрос для поиска вакансий: ')
 
     @staticmethod
-    def top_vacancies(vacancies):
+    def top_vacancies(vacancies) -> str:
         """
         выдает топ N вакансий по зарплате
         """
-        num = int(input('Какое количчество вакансий вам выдать? '))
+        num = int(input('Какое количество вакансий вам выдать? '))
         sorted_vacancies = sorted_by_salary(vacancies)
         for i in sorted_vacancies[0: num]:
             print(i)
@@ -56,13 +56,13 @@ class Functions:
                         Functions.top_vacancies(vacancies_list)
 
                     elif answer == 5:  # сохраняет информацию о вакансиях в файл
-                        file_name = input('Введите название файла для сохранения данных: (Пример: file )')
+                        file_name = input('Введите название файла для сохранения данных: (Пример: file) ')
                         file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
                         json_saver = JSONWorker(file_path)
                         json_saver.write_vacancies(vacancies_list)
 
                     elif answer == 6:  # удаляет информацию о вакансиях из файла
-                        file_name = input('Введите название файла для удаления данных: (Пример: file )')
+                        file_name = input('Введите название файла для удаления данных: (Пример: file) ')
                         file_path = os.path.join(ROOT_DIR, 'data', file_name + str('.json'))
                         json_saver = JSONWorker(file_path)
                         json_saver.delete_vacancies()

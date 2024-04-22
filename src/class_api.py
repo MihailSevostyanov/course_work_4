@@ -25,7 +25,7 @@ class HeadHunterAPI(Parser):
         self.vacancies = []
         # super().__init__(file_worker)
 
-    def load_vacancies(self, keyword):
+    def load_vacancies(self, keyword) -> list:
         self.params['text'] = keyword
         while self.params.get('page') != 20:
             response = requests.get(self.url, headers=self.headers, params=self.params)
