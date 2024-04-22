@@ -5,12 +5,12 @@ def sorted_by_salary(vacancies):
     return sorted(vacancies, reverse=True)
 
 
-def filter_by_salary(vacancies_list):
+def filter_by_salary(vacancies_list) -> list:
     """
     Фильтруем зарплаты по диапазону
     :param vacancies_list: список вакансий
     """
-    salary_range = input("Введите диапазон зарплат: (Пример: 100000 - 150000)")
+    salary_range = input("Введите диапазон зарплат: (Пример: 100000 - 150000) ")
     sorted_list = []
     list_salary_range = salary_range.split(' ')
     min_salary, max_salary = int(list_salary_range[0]), int(list_salary_range[-1])

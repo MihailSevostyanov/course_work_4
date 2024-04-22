@@ -1,4 +1,11 @@
 class Vacancy:
+    name: str
+    url: str
+    salary: int
+    currency: str
+    requirement: str
+    responsibility: str
+
     def __init__(self, name, url, salary, currency, requirement, responsibility):
         self.name = name  # название вакансии
         self.url = url  # ссылка на вакансию
@@ -15,7 +22,7 @@ class Vacancy:
         return 'информация не была найдена'
 
     @staticmethod
-    def get_product_price(salary):
+    def get_product_price(salary) -> int:
         """
         возвращает зарплату в формате 100000 или [100000, 150000]
         """
@@ -43,7 +50,7 @@ class Vacancy:
             return currency  # валюта
         return 'валюта не указана'
 
-    def filter_list(self):
+    def filter_list(self) -> int:
         """
         функция высчитывает среднюю зп из вакансий у который указан диапазон зарплат для фильтрации по убыванию
         атрибут используется только для фильтрации!!!
@@ -55,7 +62,7 @@ class Vacancy:
         return self.salary
 
     @classmethod
-    def cast_to_object_list(cls, hh_vacancies):
+    def cast_to_object_list(cls, hh_vacancies) -> list:
         returned_list = []
         for vacancy in hh_vacancies:
             # print(vacancy)
@@ -73,7 +80,7 @@ class Vacancy:
         return returned_list
 
     @classmethod
-    def vacancies_from_file(cls, vacancies):
+    def vacancies_from_file(cls, vacancies) -> list:
         returned_list = []
         for vacancy in vacancies:
             # print(vacancy)
